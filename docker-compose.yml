@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - mongodb
+  worker:
+    build: ./worker
+    depends_on:
+      - redis
+      - mongodb
+      - api
+      - vendor_sync
+      - vendor_async
+  vendor_sync:
+    build: ./vendor_mocks/sync
+    ports:
+      - "9001:9001"
+  vendor_async:
+    build: ./vendor_mocks/async
+    ports:
+      - "9002:9002"
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017" 
